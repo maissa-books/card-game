@@ -1,75 +1,82 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Heart, Volume2, SkipForward, RotateCcw } from "lucide-react"
-import GameCard from "@/components/game-card"
-import LanguageSelector from "@/components/language-selector"
-import GameMode from "@/components/game-mode"
-import { useTranslation } from "@/hooks/use-translation"
+import { useState } from "react";
+import { Heart, Volume2, SkipForward, RotateCcw } from "lucide-react";
+import GameCard from "@/components/game-card";
+import LanguageSelector from "@/components/language-selector";
+import GameMode from "@/components/game-mode";
+import { useTranslation } from "@/hooks/use-translation";
+import PWAInstallButton from "@/components/pwa-install-button";
 
-type GameStatus = "menu" | "mode" | "playing" | "finished"
+type GameStatus = "menu" | "mode" | "playing" | "finished";
 
 export default function Home() {
-  const [gameStatus, setGameStatus] = useState<GameStatus>("menu")
-  const [currentLanguage, setCurrentLanguage] = useState("en")
-  const { t } = useTranslation(currentLanguage)
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const [selectedMode, setSelectedMode] = useState("")
-  const [isFlipped, setIsFlipped] = useState(false)
+  const [gameStatus, setGameStatus] = useState<GameStatus>("menu");
+  const [currentLanguage, setCurrentLanguage] = useState("en");
+  const { t } = useTranslation(currentLanguage);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [selectedMode, setSelectedMode] = useState("");
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const getCardCount = (mode: string): number => {
+    const counts: Record<string, number> = {
+      discovery: 50,
+      romantic: 40,
+      deep: 50,
+      spicy: 30,
+      stories: 100,
+      scenarios: 10,
+    };
+    return counts[mode] || 40;
+  };
 
   const handleStartGame = (mode: string) => {
-    setSelectedMode(mode)
-    setCurrentCardIndex(0)
-    setIsFlipped(false)
-    setGameStatus("playing")
-  }
+    setSelectedMode(mode);
+    setCurrentCardIndex(0);
+    setIsFlipped(false);
+    setGameStatus("playing");
+  };
 
   const handleNextCard = () => {
-    setIsFlipped(false)
+    setIsFlipped(false);
     setCurrentCardIndex((prev) => {
-      const nextIndex = prev + 1
-      let maxCards = 40 // romantic
-      if (selectedMode === "deep") maxCards = 50
-      if (selectedMode === "spicy") maxCards = 30
-      if (selectedMode === "discovery") maxCards = 50
-      if (selectedMode === "stories") maxCards = 20
+      const nextIndex = prev + 1;
+      const maxCards = getCardCount(selectedMode);
 
       if (nextIndex >= maxCards) {
-        setGameStatus("finished")
-        return prev
+        setGameStatus("finished");
+        return prev;
       }
-      return nextIndex
-    })
-  }
+      return nextIndex;
+    });
+  };
 
   const handleSkipCard = () => {
-    let maxCards = 40
-    if (selectedMode === "deep") maxCards = 50
-    if (selectedMode === "spicy") maxCards = 30
-    if (selectedMode === "discovery") maxCards = 50
-    if (selectedMode === "stories") maxCards = 20
+    const maxCards = getCardCount(selectedMode);
 
     if (currentCardIndex + 1 >= maxCards) {
-      setGameStatus("finished")
+      setGameStatus("finished");
     } else {
-      handleNextCard()
+      handleNextCard();
     }
-  }
+  };
 
   const handleRestart = () => {
-    setGameStatus("menu")
-    setCurrentCardIndex(0)
-    setSelectedMode("")
-    setIsFlipped(false)
-  }
+    setGameStatus("menu");
+    setCurrentCardIndex(0);
+    setSelectedMode("");
+    setIsFlipped(false);
+  };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-rose-50 via-amber-50 to-orange-50 dark:from-slate-950 dark:via-rose-950 dark:to-slate-950">
+    <main className="min-h-screen bg-gradient-to-br from-rose-50 via-amber-50 to-orange-50 dark:from-slate-950 dark:via-rose-900 dark:to-slate-950">
       {/* Background decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-96 h-96 bg-rose-200 dark:bg-rose-900/20 rounded-full blur-3xl opacity-20"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-200 dark:bg-amber-900/20 rounded-full blur-3xl opacity-20"></div>
       </div>
+
+      <PWAInstallButton />
 
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
         {/* Language Selector */}
@@ -77,8 +84,8 @@ export default function Home() {
           <LanguageSelector
             currentLanguage={currentLanguage}
             onLanguageChange={(lang) => {
-              setCurrentLanguage(lang)
-              setGameStatus("menu")
+              setCurrentLanguage(lang);
+              setGameStatus("menu");
             }}
           />
         </div>
@@ -91,7 +98,9 @@ export default function Home() {
               <h1 className="text-4xl md:text-5xl font-serif font-bold text-rose-900 dark:text-rose-100 mb-2">
                 {t("title")}
               </h1>
-              <p className="text-lg text-rose-700 dark:text-rose-300 font-light">{t("subtitle")}</p>
+              <p className="text-lg text-rose-700 dark:text-rose-300 font-light">
+                {t("subtitle")}
+              </p>
             </div>
             <button
               onClick={() => setGameStatus("mode")}
@@ -103,7 +112,9 @@ export default function Home() {
         )}
 
         {/* Mode Selection Screen */}
-        {gameStatus === "mode" && <GameMode onModeSelect={handleStartGame} language={currentLanguage} />}
+        {gameStatus === "mode" && (
+          <GameMode onModeSelect={handleStartGame} language={currentLanguage} />
+        )}
 
         {/* Playing Screen */}
         {gameStatus === "playing" && (
@@ -113,15 +124,7 @@ export default function Home() {
                 {t("card")} {currentCardIndex + 1}
               </div>
               <div className="text-rose-500 font-serif text-sm">
-                {selectedMode === "deep"
-                  ? `${currentCardIndex + 1} / 50`
-                  : selectedMode === "spicy"
-                    ? `${currentCardIndex + 1} / 30`
-                    : selectedMode === "discovery"
-                      ? `${currentCardIndex + 1} / 50`
-                      : selectedMode === "stories"
-                        ? `${currentCardIndex + 1} / 20`
-                        : `${currentCardIndex + 1} / 40`}
+                {`${currentCardIndex + 1} / ${getCardCount(selectedMode)}`}
               </div>
             </div>
 
@@ -166,8 +169,12 @@ export default function Home() {
           <div className="w-full max-w-md text-center animate-in fade-in">
             <div className="mb-8 bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl">
               <Heart className="w-16 h-16 mx-auto text-rose-500 fill-rose-500 mb-4" />
-              <h2 className="text-3xl font-serif font-bold text-rose-900 dark:text-rose-100 mb-4">{t("finished")}</h2>
-              <p className="text-rose-700 dark:text-rose-300 mb-8 font-light">{t("finishedMessage")}</p>
+              <h2 className="text-3xl font-serif font-bold text-rose-900 dark:text-rose-100 mb-4">
+                {t("finished")}
+              </h2>
+              <p className="text-rose-700 dark:text-rose-300 mb-8 font-light">
+                {t("finishedMessage")}
+              </p>
               <button
                 onClick={handleRestart}
                 className="flex items-center justify-center gap-2 w-full px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-serif text-lg rounded-full transition-all duration-300 transform hover:scale-105"
@@ -180,5 +187,5 @@ export default function Home() {
         )}
       </div>
     </main>
-  )
+  );
 }

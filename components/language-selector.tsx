@@ -1,21 +1,24 @@
-"use client"
+"use client";
 
-import { Globe } from "lucide-react"
-import { useState } from "react"
+import { Globe } from "lucide-react";
+import { useState } from "react";
 
 interface LanguageSelectorProps {
-  currentLanguage: string
-  onLanguageChange: (lang: string) => void
+  currentLanguage: string;
+  onLanguageChange: (lang: string) => void;
 }
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "ar", name: "العربية", flag: "🇸🇦" },
-]
+];
 
-export default function LanguageSelector({ currentLanguage, onLanguageChange }: LanguageSelectorProps) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function LanguageSelector({
+  currentLanguage,
+  onLanguageChange,
+}: LanguageSelectorProps) {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
@@ -35,8 +38,8 @@ export default function LanguageSelector({ currentLanguage, onLanguageChange }: 
             <button
               key={lang.code}
               onClick={() => {
-                onLanguageChange(lang.code)
-                setIsOpen(false)
+                onLanguageChange(lang.code);
+                setIsOpen(false);
               }}
               className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
                 currentLanguage === lang.code
@@ -50,5 +53,5 @@ export default function LanguageSelector({ currentLanguage, onLanguageChange }: 
         </div>
       )}
     </div>
-  )
+  );
 }

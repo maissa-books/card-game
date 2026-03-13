@@ -88,9 +88,6 @@ export default function PWAInstallBanner() {
         {/* App Icon / Heart */}
         <div className="relative shrink-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-500">
           <Heart className="w-6 h-6 text-white fill-white animate-pulse" />
-          <div className="absolute -top-1 -right-1">
-            <Sparkles className="w-4 h-4 text-amber-300 animate-bounce" />
-          </div>
         </div>
 
         {/* Content */}

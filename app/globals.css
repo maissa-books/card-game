@@ -122,6 +122,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -142,15 +143,48 @@ body {
 /* Add sensual background glow for intimate atmosphere */
 @layer utilities {
   .sensual-glow {
-    background: radial-gradient(
-        circle at 20% 30%,
-        rgba(217, 76, 107, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 80% 70%,
-        rgba(139, 61, 91, 0.08) 0%,
-        transparent 50%
-      );
+    background: radial-gradient(circle at 20% 30%,
+        rgba(217, 76, 107, 0.12) 0%,
+        transparent 70%),
+      radial-gradient(circle at 80% 70%,
+        rgba(139, 61, 91, 0.12) 0%,
+        transparent 70%);
+  }
+
+  .hoverShadowHighlight {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hoverShadowHighlight:hover {
+    box-shadow: 0 25px 50px -12px rgba(225, 29, 72, 0.2);
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
   }
 }

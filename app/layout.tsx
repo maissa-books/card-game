@@ -8,9 +8,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  // title: "Romantic Couples - Spicy Stories & Scenarios",
-  title: "Card games",
-  description: "Card games",
+  title: "M&M's",
+  description: "An intimate game for couples",
   // description:
   //   "An intimate app for married couples with romantic stories and spicy adventures",
   manifest: "/manifest.json",
@@ -29,11 +28,15 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fdf2f8" },
-    { media: "(prefers-color-scheme: dark)", color: "#1e1b4b" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
   ],
 };
+
+import SWRegistration from "@/components/sw-registration";
+import PWAInstallBanner from "@/components/pwa-install-button";
 
 export default function RootLayout({
   children,
@@ -48,10 +51,12 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <meta name="apple-mobile-web-app-title" content="Romance Stories" />
+        <meta name="apple-mobile-web-app-title" content="M&M's" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={`font-sans antialiased`}>
+        <SWRegistration />
+        <PWAInstallBanner />
         {children}
         <Analytics />
       </body>
